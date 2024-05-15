@@ -1,6 +1,6 @@
 class Solution {
 public:
-    bool bfsKing(vector<vector<int>> &safeness, int len, int mid, int dx[], int dy[]){
+    bool bfsII(vector<vector<int>> &safeness, int len, int mid, int dx[], int dy[]){
         if(safeness[0][0] < mid) return false;
         vector<vector<bool>> visited(len, vector<bool>(len, false));
         queue<pair<pair<int, int>, int>> cell;
@@ -26,10 +26,10 @@ public:
         }
         return false;
     }
-
-    void bfs(vector<vector<int>> &grid, vector<vector<int>> &safeness, int i, int j, int len, int dx[], int dy[]){
+/**
+    void bfs(vector<vector<int>> &grid, vector<vector<int>> &safeness, vector<vector<bool>> &vis, int i, int j, int len, int dx[], int dy[]){
         queue<pair< pair<int, int>, int> > bfsQueue; //( (x, y), safeness )
-        vector<vector<bool>> visited(len, vector<bool>(len, false));
+        vector<vector<bool>> visited(vis);
         bfsQueue.push(make_pair(make_pair(i, j), safeness[i][j]));
         visited[i][j] = true;
         while(!bfsQueue.empty()){
@@ -43,7 +43,7 @@ public:
                 if(newX<len && newY<len && newX>=0 && newY>=0){
                     if(!visited[newX][newY] && safeness[newX][newY]!=0){
                         visited[newX][newY] = true;
-                        safeness[newX][newY] = min(safeness[newX][newY], prevSafeness+1); //Manhatten Distance
+                        safeness[newX][newY] = prevSafeness+1; //Manhatten Distance
                         bfsQueue.push(make_pair(make_pair(newX, newY), safeness[newX][newY]));
                     }
                     
@@ -52,7 +52,8 @@ public:
         }
     }
     
-    
+ **/
+
     int maximumSafenessFactor(vector<vector<int>>& grid) {
         int len = grid.size();
         if(grid[0][0] == 1 || grid[len-1][len-1] == 1) return 0;
@@ -60,30 +61,47 @@ public:
         int dx[4] = {-1, 0, 1, 0};
         int dy[4] = {0, 1, 0, -1};
         queue<pair<int, int>> curr;
+        vector<vector<bool>> visited(len, vector<bool>(len, false));
         for(int i=0; i<len; i++){
             for(int j=0; j<len; j++){
                 if(grid[i][j] == 1){
                     curr.push(make_pair(i, j));
                     safeness[i][j] = 0;
+                    visited[i][j] = true;
                 }
             }
         }
         while(!curr.empty()){
-            pair<int, int> loc = curr.front();
-            int i=loc.first;
-            int j=loc.second;
-            curr.pop();
-            bfs(grid, safeness, i, j, len, dx, dy);
+            int total = curr.size();
+            while(total--){
+                pair<int, int> location = curr.front();
+                int i=location.first;
+                int j=location.second;
+                curr.pop();
+                int prevSafeness = safeness[i][j];
+                for(int x=0; x<4; x++){
+                    int newX = location.first + dx[x];
+                    int newY = location.second + dy[x];
+                    if(newX<len && newY<len && newX>=0 && newY>=0){
+                        if(!visited[newX][newY]){
+                            visited[newX][newY] = true;
+                            safeness[newX][newY] = prevSafeness+1; //Manhatten Distance
+                            curr.push(make_pair(newX, newY));
+                        }
+                        
+                    }
+                }   
+            }
         }
         
 
-
+        // Binary Search, from 0 to max possible |V|, len+1. if path exists for |V|
         int start = 0;
         int end = len+1;
         int ans=0;
         while(start <= end){
             int mid = (start+end)/2;
-            if(bfsKing(safeness, len, mid, dx, dy))
+            if(bfsII(safeness, len, mid, dx, dy))
             {
                 ans = mid;
                 start = mid+1;
