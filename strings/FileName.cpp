@@ -34,6 +34,8 @@ public:
 
 int main(){
 	string s = "A man, a plan, a canal: Panama";
+    string temp = "a";
+    cout<<temp.substr(1, temp.length()-1);
 	Solution str = Solution();
 	cout<<str.isPalindrome(s);
 	return 0;
