@@ -8,7 +8,7 @@
 using namespace std;
 
     
-void findWord(vector<vector<string>> &ans, string &x, vector<string> temp, unordered_set<string> &words, int i, int j, int &len, bool isPresent){
+void findWord(vector<vector<string>> &ans, string &x, vector<string> temp, unordered_set<string> &words, int i, int &len, bool isPresent){
     if(i  >= len){
         //cout<<"x";
         if(isPresent){
@@ -29,7 +29,7 @@ void findWord(vector<vector<string>> &ans, string &x, vector<string> temp, unord
             isPresent = true;
             //cout<<endl<<curr<<endl;
             temp.push_back(curr);
-            findWord(ans, x, temp, words, i+z+1, 0, len, isPresent);
+            findWord(ans, x, temp, words, i+z+1, len, isPresent);
             temp.pop_back();
             isPresent = false;
             //findWord(ans, x, temp, words, i, z+1, len, false);
@@ -64,7 +64,7 @@ int main(){
     bool isPresent = false;
     vector<string> temp;
     
-    findWord(ans, x, temp, words, 0, 0, len, isPresent);
+    findWord(ans, x, temp, words, 0, len, isPresent);
 
     //display1D(converttoSentence);
     //cout<<"done";
