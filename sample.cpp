@@ -10,11 +10,7 @@ using namespace std;
     
 void findWord(vector<vector<string>> &ans, string &x, vector<string> temp, unordered_set<string> &words, int i, int &len, bool isPresent){
     if(i  >= len){
-        //cout<<"x";
         if(isPresent){
-            //cout<<"x";
-            
-            //cout<<"x";
             ans.push_back(temp);
         }
         return;
@@ -61,11 +57,12 @@ int main(){
     string x = "penapplepen";
     vector<vector<string>> ans;
     int len = x.length();
+
     bool isPresent = false;
     vector<string> temp;
     
     findWord(ans, x, temp, words, 0, len, isPresent);
-
+    
     //display1D(converttoSentence);
     //cout<<"done";
     vector<string> final = displayVec(ans);
