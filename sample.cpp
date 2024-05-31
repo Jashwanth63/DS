@@ -1,72 +1,42 @@
-#include<iostream>
-#include<string>
-#include<climits>
-#include<vector>
-#include<unordered_set>
+class Solution {
+public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        int len = strs.size();
+        vector<bool> visited(len, false);
+        vector<vector<string>> ans;
+        for(int i=0; i<len; i++){
+            if(visited[i]) continue;
+            unordered_map<char, int> counts;
+            vector<string> temp;
+            temp.push_back(strs[i]);
+            visited[i] = true;
+            int i_len = strs[i].length();
+            // Do count for ith
+            for(int k=0; k<i_len; k++){
+                counts[strs[i][k]]++;
+            }
 
-
-using namespace std;
-
-    
-void findWord(vector<vector<string>> &ans, string &x, vector<string> temp, unordered_set<string> &words, int i, int &len, bool isPresent){
-    if(i  >= len){
-        if(isPresent){
+            for(int j=0; j<len; j++){
+                if(j == i || visited[j]) continue;
+                unordered_map<char, int> tempCount(counts);
+                if(i_len != strs[j].length()) continue;
+                else{
+                    int m_len = strs[j].length();
+                    for(int m=0; m<m_len; m++){
+                        if(tempCount[strs[j][m]] > 0){
+                            visited[j] = true;
+                            tempCount[strs[j][m]]--;
+                        } 
+                        else{
+                            visited[j] = false;
+                            break;
+                        } 
+                    }
+                    if(visited[j]) temp.push_back(strs[j]);  
+                }
+            }
             ans.push_back(temp);
         }
-        return;
+        return ans;
     }
-    isPresent = false;
-    for(int z = 0; (z+i)<len; z++){
-        //cout<<"working";
-        string curr = x.substr(i, z+1);
-        cout<<i<<" "<<z<<" ";
-        cout<<curr<<" "<<endl;
-        if(words.find(curr) != words.end()){ //If found
-            isPresent = true;
-            //cout<<endl<<curr<<endl;
-            temp.push_back(curr);
-            findWord(ans, x, temp, words, i+z+1, len, isPresent);
-            temp.pop_back();
-            isPresent = false;
-            //findWord(ans, x, temp, words, i, z+1, len, false);
-            //cout<<"X";
-        }   
-    }
-    
-    return;
-}
-
-
-vector<string> displayVec(vector<vector<string>> &ans){
-    vector<string> final;
-    for(auto sentence: ans){
-        string curr;
-        for(auto word: sentence){
-            curr += word + " ";
-        }
-        cout<<curr;
-        final.push_back(curr);
-        cout<<endl;
-    }
-    return final;
-}
-
-
-int main(){
-    unordered_set<string> words{"apple", "pen", "epen", "appl"};
-    string x = "penapplepen";
-    vector<vector<string>> ans;
-    int len = x.length();
-
-    bool isPresent = false;
-    vector<string> temp;
-    
-    findWord(ans, x, temp, words, 0, len, isPresent);
-    
-    //display1D(converttoSentence);
-    //cout<<"done";
-    vector<string> final = displayVec(ans);
-
-    return 0;
-
-}
+};
