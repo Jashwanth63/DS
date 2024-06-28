@@ -8,7 +8,7 @@ class Solution {
             cap[i].second = i; 
         }
         sort(cap.begin(), cap.end());
-        // Can'tdo binary search to find left index. Because elements have to be added to the max heap. So linear search.
+        // Can'tdo binary search to find left index. Because elements have to be added to the max heap. So linear search. EDIT: Turns out you can :D. Idk how
         int stop = 0;
         int i=0;
         
